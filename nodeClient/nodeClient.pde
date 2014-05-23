@@ -3,8 +3,7 @@ int boxSize;
 boolean started = false;
 
 void setup() {
-  size(1024, 768);
-  //size(320,320);
+  size(640,640);
   
   boxSize = 50;
   mousePrev = new PVector(-1, -1);
