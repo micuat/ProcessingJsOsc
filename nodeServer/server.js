@@ -17,14 +17,26 @@ hashCode = function(str){
 io.sockets.on('connection', function (socket) {
   
   socket.on('mouseEvent', function (data) {
-    client.send('/pen/coord', data.x, data.y, hashCode(socket.id));
+    if( data.m == 0 ) {
+      client.send('/pen/coord', data.x, data.y, hashCode(socket.id), data.m);
+    } else {
+      client.send('/stamp/coord', data.x, data.y, hashCode(socket.id), data.m);
+    }
   });
   socket.on('mousePressed', function (data) {
     console.log(socket.id);
-    client.send('/pen/pressed', data.x, data.y, hashCode(socket.id));
+    if( data.m == 0 ) {
+      client.send('/pen/pressed', data.x, data.y, hashCode(socket.id), data.m);
+    } else {
+      client.send('/stamp/pressed', data.x, data.y, hashCode(socket.id), data.m);
+    }
   });
   socket.on('mouseReleased', function (data) {
-    client.send('/pen/released', data.x, data.y, hashCode(socket.id));
+    if( data.m == 0 ) {
+      client.send('/pen/released', data.x, data.y, hashCode(socket.id), data.m);
+    } else {
+      client.send('/stamp/released', data.x, data.y, hashCode(socket.id), data.m);
+    }
   });
   socket.on('eraseEvent', function (data) {
     console.log('erasing');

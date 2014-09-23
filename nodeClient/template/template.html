@@ -40,16 +40,16 @@
 		<script src="processing.js" type="text/javascript"></script>
 		@@scripts@@
 
-		<script src="http://127.0.0.1:8080/socket.io/socket.io.js"></script> <!--should be server ip -->
+		<script src="http://naotobook:8080/socket.io/socket.io.js"></script> <!--should be server ip -->
 		<script>
-		  var socket = io.connect('http://127.0.0.1:8080');  <!--should be server ip -->
+		  var socket = io.connect('http://naotobook:8080');  <!--should be server ip -->
 		    socket.emit('my other event', { my: 'hello oF' });
 		  socket.on('news', function (data) {
 		    console.log(data);
 		  });
-		  function emitMouse(mouseX, mouseY) {socket.emit('mouseEvent', { x: mouseX, y: mouseY});}
-		  function emitPressed(mouseX, mouseY) {socket.emit('mousePressed', { x: mouseX, y: mouseY});}
-		  function emitReleased(mouseX, mouseY) {socket.emit('mouseReleased', { x: mouseX, y: mouseY});}
+		  function emitMouse(mouseX, mouseY, mode) {socket.emit('mouseEvent', { x: mouseX, y: mouseY, m: mode});}
+		  function emitPressed(mouseX, mouseY, mode) {socket.emit('mousePressed', { x: mouseX, y: mouseY, m: mode});}
+		  function emitReleased(mouseX, mouseY, mode) {socket.emit('mouseReleased', { x: mouseX, y: mouseY, m: mode});}
 		  function emitErase() {socket.emit('eraseEvent', { doErase: 1});}
 		  
 		</script>
