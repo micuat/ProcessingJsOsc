@@ -15,6 +15,9 @@ void setup() {
   oscP5 = new OscP5(this,57130);
   
   points = new ArrayList<PVector>();
+  
+  noStroke();
+  fill(204);
 }
 
 
@@ -23,6 +26,7 @@ void draw() {
   ellipse(stampX, stampY, 30, 30);
   
   int prevX = -1, prevY = -1;
+  // clone object to avoid oscEvent interruption
   ArrayList<PVector> pointsCopied = (ArrayList<PVector>)points.clone();
   for( PVector p: pointsCopied ) {
     if( prevX >= 0 && p.x >= 0 ) {
