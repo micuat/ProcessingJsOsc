@@ -4,6 +4,7 @@ boolean started = false;
 
 void setup() {
   size(640,640);
+  size(window.innerWidth, window.innerHeight);
   
   boxSize = 50;
   mousePrev = new PVector(-1, -1);
@@ -61,4 +62,5 @@ void mouseReleased() {
     emitReleased(mouseX, mouseY);
   }
 }
+
 
