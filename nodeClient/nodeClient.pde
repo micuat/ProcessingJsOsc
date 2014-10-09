@@ -11,6 +11,8 @@ PVector viewportXY, viewportWH;
 float vZoom; // zoom rate compared to window height
 boolean drawingValid = false;
 
+ArrayList points;
+
 float toImCoordX(float x) {
   return x / vZoom + viewportXY.x;
 }
@@ -24,6 +26,7 @@ void setup() {
   size(window.innerWidth, window.innerHeight);
 
   boxSize = 50;
+  points = new ArrayList();
   prev = new PVector();
   stamp = new PVector();
   viewportXY = new PVector();
@@ -55,10 +58,10 @@ void refresh() {
   //fill(0, 104);
   //rect(0, 0, width, height);
 
-  colorMode(HSB, numModes - 1);
+  colorMode(HSB, numModes);
   noFill();
   for ( int i = 0; i < numModes; i++ ) {
-    stroke(i, numModes - 1, numModes - 1);
+    stroke(i, numModes, numModes);
     rect(width - boxSize, boxSize * i + 1, boxSize - 2, boxSize - 3);
   }
   noStroke();
@@ -67,9 +70,30 @@ void refresh() {
   rect(width - boxSize, height - boxSize, boxSize, boxSize);
 
   rectMode(CENTER);
+
+  // restore lines and stamps
+  stroke(200);
+  int prevX = -1, prevY = -1;
+  for ( int i = 0; i < points.size(); i++ ) {
+    PVector p = points.get(i);
+    if ( prevX >= 0 && p.x >= 0 ) {
+      line(prevX, prevY, p.x, p.y);
+    }
+    prevX = (int)p.x;
+    prevY = (int)p.y;
+  }
+
+  drawStamp();
 }
 
 void draw() {
+}
+
+void drawStamp() {
+  float stampSizeX = 40;
+  float stampSizeY = 40;
+  fill(200);
+  ellipse(stamp.x, stamp.y, stampSizeX/2 * vZoom, stampSizeY/2 * vZoom);
 }
 
 void mousePressed() {
@@ -79,6 +103,7 @@ void mousePressed() {
       // erase
       if ( mouseX > width - boxSize && mouseY > height - boxSize ) {
         emitErase();
+        points.clear();
         refresh();
       }
       // buttons
@@ -98,16 +123,13 @@ void mousePressed() {
       if ( mode == 0 ) {
         prev.x = mouseX;
         prev.y = mouseY;
+        points.add(new PVector(mouseX, mouseY));
       } 
       // update stamp
       else if ( mode == 1 ) {
-        noStroke();
-        fill(54);
-        rect(stamp.x, stamp.y, 30, 30);
         stamp.x = mouseX;
         stamp.y = mouseY;
-        fill(200);
-        ellipse(stamp.x, stamp.y, 30, 30);
+        drawStamp();
       }
       emitPressed(toImCoordX(mouseX), toImCoordY(mouseY), mode);
     }
@@ -133,6 +155,7 @@ void mouseDragged() {
   if ( countToGood >= 2 && drawingValid ) {
     emitMouse(toImCoordX(mouseX), toImCoordY(mouseY), mode);
     if ( mode == 0 ) {
+      points.add(new PVector(mouseX, mouseY));
       if ( prev.x >= 0 ) {
         stroke(200);
         line(prev.x, prev.y, mouseX, mouseY);
@@ -141,13 +164,9 @@ void mouseDragged() {
       }
     } 
     else if ( mode == 1 ) {
-      noStroke();
-      fill(54);
-      rect(stamp.x, stamp.y, 30, 30);
       stamp.x = mouseX;
       stamp.y = mouseY;
-      fill(200);
-      ellipse(stamp.x, stamp.y, 30, 30);
+      drawStamp();
     }
   }
 }
@@ -156,11 +175,17 @@ void mouseReleased() {
   if ( countToGood >= 2 && drawingValid ) {
     prev.x = -1;
     prev.y = -1;
+    if ( mode == 0 ) {
+      points.add(new PVector(-1, -1));
+    }
     if ( mouseX > width - boxSize && mouseY > height - boxSize ) {
     } 
     else {
       emitReleased(toImCoordX(mouseX), toImCoordY(mouseY), mode);
     }
+  }
+  if ( countToGood >= 2 ) {
+    refresh();
   }
 }
 
