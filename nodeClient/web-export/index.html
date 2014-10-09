@@ -44,9 +44,9 @@ function getProcessingSketchId () { return 'nodeClient'; }
 </script>
 
 
-		<script src="http://naotobook:8080/socket.io/socket.io.js"></script> <!--should be server ip -->
+		<script src="http://localhost:8080/socket.io/socket.io.js"></script> <!--should be server ip -->
 		<script>
-		  var socket = io.connect('http://naotobook:8080');  <!--should be server ip -->
+		  var socket = io.connect('http://localhost:8080');  <!--should be server ip -->
 		    socket.emit('my other event', { my: 'hello oF' });
 		  socket.on('news', function (data) {
 		    console.log(data);
@@ -54,6 +54,7 @@ function getProcessingSketchId () { return 'nodeClient'; }
 		  function emitMouse(mouseX, mouseY, mode) {socket.emit('mouseEvent', { x: mouseX, y: mouseY, m: mode});}
 		  function emitPressed(mouseX, mouseY, mode) {socket.emit('mousePressed', { x: mouseX, y: mouseY, m: mode});}
 		  function emitReleased(mouseX, mouseY, mode) {socket.emit('mouseReleased', { x: mouseX, y: mouseY, m: mode});}
+		  function emitModeChange(mouseX, mouseY, mode) {socket.emit('modeChange', { x: mouseX, y: mouseY, m: mode});}
 		  function emitErase() {socket.emit('eraseEvent', { doErase: 1});}
 		  
 		</script>

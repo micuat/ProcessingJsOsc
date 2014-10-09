@@ -2,6 +2,7 @@ PVector prev;
 PVector stamp;
 int boxSize;
 int mode = 0;
+int numModes = 8;
 
 void setup() {
   size(640, 640);
@@ -25,14 +26,17 @@ void refresh() {
   
   background(54);
 
-  noStroke();
 //  fill(255, 255, 255, 54);
 //  rect(0, 0, width, height);
-
-  fill(200, 50, 50);
-  rect(width - boxSize, 0, boxSize, boxSize);
-  fill(50, 200, 100);
-  rect(width - boxSize, boxSize, boxSize, boxSize);
+  
+  colorMode(HSB, numModes - 1);
+  noFill();
+  for( int i = 0; i < numModes; i++ ) {
+    stroke(i, numModes - 1, numModes - 1);
+    rect(width - boxSize, boxSize * i + 1, boxSize - 2, boxSize - 3);
+  }
+  noStroke();
+  colorMode(RGB, 255);
   fill(200);
   rect(width - boxSize, height - boxSize, boxSize, boxSize);
   
@@ -44,15 +48,18 @@ void draw() {
 
 void mousePressed() {
   if ( mouseX > width - boxSize ) {
-    if ( 0 <= mouseY && mouseY < boxSize ) {
-      mode = 0;
-    } 
-    else if ( boxSize <= mouseY && mouseY < boxSize * 2 ) {
-      mode = 1;
-    } 
-    else if ( mouseX > width - boxSize && mouseY > height - boxSize ) {
+    if ( mouseX > width - boxSize && mouseY > height - boxSize ) {
       emitErase();
       refresh();
+    }
+    else {
+      for( int i = 0; i < numModes; i++ ) {
+        if ( boxSize * i <= mouseY && mouseY < boxSize * (i+1)) {
+          mode = i;
+          emitModeChange(mouseX, mouseY, mode);
+          break;
+        }
+      }
     }
   } 
   else {

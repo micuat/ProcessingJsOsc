@@ -38,6 +38,10 @@ io.sockets.on('connection', function (socket) {
       client.send('/stamp/released', data.x, data.y, hashCode(socket.id), data.m);
     }
   });
+  socket.on('modeChange', function (data) {
+    console.log('mode: ' + data.m.toString());
+    client.send('/mode/change', data.x, data.y, hashCode(socket.id), data.m);
+  });
   socket.on('eraseEvent', function (data) {
     console.log('erasing');
     client.send('/pen/erase', 0, 0, hashCode(socket.id));
