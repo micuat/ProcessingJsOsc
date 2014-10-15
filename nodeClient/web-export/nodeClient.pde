@@ -1,6 +1,7 @@
-/* @pjs preload="image.jpg"; */
+/* @pjs preload="image.jpg, eye.png"; */
 
 PImage img;
+PImage eye;
 PVector prev;
 PVector stamp;
 int boxSize;
@@ -39,6 +40,7 @@ void setup() {
   strokeWeight(3);
 
   img = loadImage("image.jpg");
+  eye = loadImage("eye.png");
 
   refresh();
 }
@@ -90,10 +92,12 @@ void draw() {
 }
 
 void drawStamp() {
-  float stampSizeX = 40;
-  float stampSizeY = 40;
+  float stampSizeX = eye.width * vZoom;
+  float stampSizeY = eye.height * vZoom;
   fill(200);
-  ellipse(stamp.x, stamp.y, stampSizeX/2 * vZoom, stampSizeY/2 * vZoom);
+  image(eye, stamp.x - stampSizeX/2, stamp.y - stampSizeY/2,
+    stampSizeX, stampSizeY);
+  //  ellipse(stamp.x, stamp.y, stampSizeX/2 * vZoom, stampSizeY/2 * vZoom);
 }
 
 void mousePressed() {
