@@ -1,9 +1,9 @@
 /* @pjs preload="image.jpg, eye.png"; */
 
 PImage img;
-PImage eye;
+ArrayList stampImgs;
 PVector prev;
-PVector stamp;
+ArrayList stampXY;
 int boxSize;
 int mode = 0;
 int numModes = 8;
@@ -28,8 +28,9 @@ void setup() {
 
   boxSize = 50;
   points = new ArrayList();
+  stampImgs = new ArrayList();
+  stampXY = new ArrayList();
   prev = new PVector();
-  stamp = new PVector();
   viewportXY = new PVector();
   viewportWH = new PVector();
   frameRate(30);
@@ -40,7 +41,10 @@ void setup() {
   strokeWeight(3);
 
   img = loadImage("image.jpg");
-  eye = loadImage("eye.png");
+  stampImgs.add(loadImage("eye.png"));
+
+  stampXY.add(new PVector());
+  stampXY.add(new PVector());
 
   refresh();
 }
@@ -85,19 +89,27 @@ void refresh() {
     prevY = (int)p.y;
   }
 
-  drawStamp();
+  drawStamp(0);
+  drawStamp(1);
 }
 
 void draw() {
 }
 
-void drawStamp() {
-  float stampSizeX = eye.width * vZoom;
-  float stampSizeY = eye.height * vZoom;
-  fill(200);
-  image(eye, stamp.x - stampSizeX/2, stamp.y - stampSizeY/2,
-    stampSizeX, stampSizeY);
-  //  ellipse(stamp.x, stamp.y, stampSizeX/2 * vZoom, stampSizeY/2 * vZoom);
+void drawStamp(int index) {
+  PImage s;
+  if ( index == 0 ) s = stampImgs.get(0);
+  if ( index == 1 ) s = stampImgs.get(0);
+
+  float stampSizeX = s.width * vZoom;
+  float stampSizeY = s.height * vZoom;
+
+  pushMatrix();
+  translate(stampXY.get(index).x, stampXY.get(index).y);
+  if ( index == 1 ) scale(-1, 1);
+  image(s, - stampSizeX/2, - stampSizeY/2, 
+  stampSizeX, stampSizeY);
+  popMatrix();
 }
 
 void mousePressed() {
@@ -130,10 +142,10 @@ void mousePressed() {
         points.add(new PVector(mouseX, mouseY));
       } 
       // update stamp
-      else if ( mode == 1 ) {
-        stamp.x = mouseX;
-        stamp.y = mouseY;
-        drawStamp();
+      else if ( mode == 1 || mode == 2 ) {
+        stampXY.get(mode-1).x = mouseX;
+        stampXY.get(mode-1).y = mouseY;
+        drawStamp(mode-1);
       }
       emitPressed(toImCoordX(mouseX), toImCoordY(mouseY), mode);
     }
@@ -167,10 +179,10 @@ void mouseDragged() {
         prev.y = mouseY;
       }
     } 
-    else if ( mode == 1 ) {
-      stamp.x = mouseX;
-      stamp.y = mouseY;
-      drawStamp();
+    else if ( mode == 1 || mode == 2 ) {
+      stampXY.get(mode-1).x = mouseX;
+      stampXY.get(mode-1).y = mouseY;
+      drawStamp(mode-1);
     }
   }
 }
