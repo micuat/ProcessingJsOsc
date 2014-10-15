@@ -11,6 +11,7 @@ int countToGood = 0;
 PVector viewportXY, viewportWH;
 float vZoom; // zoom rate compared to window height
 boolean drawingValid = false;
+int curStamp;
 
 ArrayList points;
 
@@ -46,10 +47,10 @@ void setup() {
   stampXY.add(new PVector());
   stampXY.add(new PVector());
 
-  refresh();
+  refresh(true);
 }
 
-void refresh() {
+void refresh(boolean hardReset) {
   rectMode(CORNER);
 
   background(54);
@@ -89,6 +90,14 @@ void refresh() {
     prevY = (int)p.y;
   }
 
+  // clear stamps when hard reset
+  if ( hardReset ) {
+    for (int i = 0; i < stampXY.size(); i++) {
+      stampXY.get(i).x = i * 100;
+      stampXY.get(i).y = 50;
+    }
+  }
+
   drawStamp(0);
   drawStamp(1);
 }
@@ -120,7 +129,7 @@ void mousePressed() {
       if ( mouseX > width - boxSize && mouseY > height - boxSize ) {
         emitErase();
         points.clear();
-        refresh();
+        refresh(true);
       }
       // buttons
       else {
@@ -133,7 +142,7 @@ void mousePressed() {
         }
       }
     } 
-    else {
+    else { //if (mouseX < viewportWH.x) {
       drawingValid = true;
       // pen
       if ( mode == 0 ) {
@@ -142,10 +151,17 @@ void mousePressed() {
         points.add(new PVector(mouseX, mouseY));
       } 
       // update stamp
-      else if ( mode == 1 || mode == 2 ) {
-        stampXY.get(mode-1).x = mouseX;
-        stampXY.get(mode-1).y = mouseY;
-        drawStamp(mode-1);
+      else if ( mode == 1 ) {
+        curStamp = -1;
+        for (int i = 0; i < stampXY.size(); i++ ) {
+          if (stampXY.get(i).dist(new PVector(mouseX, mouseY)) < 200) {
+            stampXY.get(i).x = mouseX;
+            stampXY.get(i).y = mouseY;
+            drawStamp(i);
+            curStamp = i;
+            break;
+          }
+        }
       }
       emitPressed(toImCoordX(mouseX), toImCoordY(mouseY), mode);
     }
@@ -163,7 +179,7 @@ void mousePressed() {
     viewportWH.y = mouseY - viewportXY.y;
     vZoom = height / viewportWH.y; 
     countToGood += 1;
-    refresh();
+    refresh(true);
   }
 }
 
@@ -179,10 +195,11 @@ void mouseDragged() {
         prev.y = mouseY;
       }
     } 
-    else if ( mode == 1 || mode == 2 ) {
-      stampXY.get(mode-1).x = mouseX;
-      stampXY.get(mode-1).y = mouseY;
-      drawStamp(mode-1);
+    else if ( mode == 1 ) {
+      if ( curStamp >= stampXY.size() || curStamp < 0) return;
+      stampXY.get(curStamp).x = mouseX;
+      stampXY.get(curStamp).y = mouseY;
+      drawStamp(curStamp);
     }
   }
 }
@@ -201,7 +218,7 @@ void mouseReleased() {
     }
   }
   if ( countToGood >= 2 ) {
-    refresh();
+    refresh(false); // soft reset
   }
 }
 
