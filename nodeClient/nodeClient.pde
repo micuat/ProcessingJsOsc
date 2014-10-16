@@ -146,8 +146,8 @@ void mousePressed() {
       else {
         for ( int i = 0; i < numModes; i++ ) {
           if ( boxSize * i <= mouseY && mouseY < boxSize * (i+1)) {
-            mode = i;
-            emitModeChange(toImCoordX(mouseX), toImCoordY(mouseY), mode);
+            if( i <= 1 ) mode = i;
+            emitModeChange(toImCoordX(mouseX), toImCoordY(mouseY), i);
             break;
           }
         }
@@ -229,7 +229,7 @@ void mouseReleased() {
       emitReleased(toImCoordX(mouseX), toImCoordY(mouseY), mode);
     }
   }
-  if ( countToGood >= 2 && mode == 1 ) {
+  if ( countToGood >= 2 && mode == 1 && curStamp >= 0) {
     refresh(false); // soft reset
   }
 }
