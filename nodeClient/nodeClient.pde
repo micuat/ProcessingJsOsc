@@ -154,7 +154,7 @@ void mousePressed() {
       else if ( mode == 1 ) {
         curStamp = -1;
         for (int i = 0; i < stampXY.size(); i++ ) {
-          if (stampXY.get(i).dist(new PVector(mouseX, mouseY)) < 200) {
+          if (stampXY.get(i).dist(new PVector(mouseX, mouseY)) < 100) {
             stampXY.get(i).x = mouseX;
             stampXY.get(i).y = mouseY;
             drawStamp(i);
@@ -217,7 +217,7 @@ void mouseReleased() {
       emitReleased(toImCoordX(mouseX), toImCoordY(mouseY), mode);
     }
   }
-  if ( countToGood >= 2 ) {
+  if ( countToGood >= 2 && mode == 1 ) {
     refresh(false); // soft reset
   }
 }
