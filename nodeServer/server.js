@@ -20,7 +20,7 @@ io.sockets.on('connection', function (socket) {
     if( data.m == 0 ) {
       client.send('/pen/coord', data.x, data.y, hashCode(socket.id), data.m);
     } else {
-      client.send('/stamp/coord', data.x, data.y, hashCode(socket.id), data.m);
+      client.send('/stamp/coord', data.x, data.y, hashCode(socket.id), Number(data.s));
     }
   });
   socket.on('mousePressed', function (data) {
@@ -28,14 +28,15 @@ io.sockets.on('connection', function (socket) {
     if( data.m == 0 ) {
       client.send('/pen/pressed', data.x, data.y, hashCode(socket.id), data.m);
     } else {
-      client.send('/stamp/pressed', data.x, data.y, hashCode(socket.id), data.m);
+      client.send('/stamp/pressed', data.x, data.y, hashCode(socket.id), Number(data.s));
+      console.log(data.s);
     }
   });
   socket.on('mouseReleased', function (data) {
     if( data.m == 0 ) {
       client.send('/pen/released', data.x, data.y, hashCode(socket.id), data.m);
     } else {
-      client.send('/stamp/released', data.x, data.y, hashCode(socket.id), data.m);
+      client.send('/stamp/released', data.x, data.y, hashCode(socket.id), Number(data.s));
     }
   });
   socket.on('modeChange', function (data) {

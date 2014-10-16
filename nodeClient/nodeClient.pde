@@ -175,7 +175,7 @@ void mousePressed() {
           }
         }
       }
-      emitPressed(toImCoordX(mouseX), toImCoordY(mouseY), mode);
+      emitPressed(toImCoordX(mouseX), toImCoordY(mouseY), mode, curStamp);
     }
   }
   // top left
@@ -197,7 +197,7 @@ void mousePressed() {
 
 void mouseDragged() {
   if ( countToGood >= 2 && drawingValid ) {
-    emitMouse(toImCoordX(mouseX), toImCoordY(mouseY), mode);
+    emitMouse(toImCoordX(mouseX), toImCoordY(mouseY), mode, curStamp);
     if ( mode == 0 ) {
       points.add(new PVector(mouseX, mouseY));
       if ( prev.x >= 0 ) {
