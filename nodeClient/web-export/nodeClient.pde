@@ -65,14 +65,9 @@ void refresh(boolean hardReset) {
   //fill(0, 104);
   //rect(0, 0, width, height);
 
-  colorMode(HSB, numModes);
-  noFill();
-  for ( int i = 0; i < numModes; i++ ) {
-    stroke(i, numModes, numModes);
-    rect(width - boxSize, boxSize * i + 1, boxSize - 2, boxSize - 3);
-  }
+  drawSidebar();
+  
   noStroke();
-  colorMode(RGB, 255);
   fill(200);
   rect(width - boxSize, height - boxSize, boxSize, boxSize);
 
@@ -121,6 +116,22 @@ void drawStamp(int index) {
   popMatrix();
 }
 
+void drawSidebar() {
+  rectMode(CORNER);
+  fill(54);
+  noStroke();
+  rect(width - boxSize, 0, boxSize, height - boxSize);
+  colorMode(HSB, numModes);
+  noFill();
+  for ( int i = 0; i < numModes; i++ ) {
+    stroke(i, numModes, numModes);
+    if( i == mode ) fill(i, numModes, numModes);
+    rect(width - boxSize, boxSize * i + 1, boxSize - 2, boxSize - 3);
+    if( i == mode ) noFill();
+  }
+  colorMode(RGB, 255);
+}
+
 void mousePressed() {
   if ( countToGood >= 2 ) {
     if ( mouseX > width - boxSize ) {
@@ -140,6 +151,7 @@ void mousePressed() {
             break;
           }
         }
+        drawSidebar();
       }
     } 
     else { //if (mouseX < viewportWH.x) {
@@ -154,7 +166,7 @@ void mousePressed() {
       else if ( mode == 1 ) {
         curStamp = -1;
         for (int i = 0; i < stampXY.size(); i++ ) {
-          if (stampXY.get(i).dist(new PVector(mouseX, mouseY)) < 100) {
+          if (stampXY.get(i).dist(new PVector(mouseX, mouseY)) < 50) {
             stampXY.get(i).x = mouseX;
             stampXY.get(i).y = mouseY;
             drawStamp(i);
