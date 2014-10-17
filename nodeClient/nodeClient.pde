@@ -13,6 +13,7 @@ float vZoom; // zoom rate compared to window height
 boolean drawingValid = false;
 int curStamp;
 int penColor = 0;
+float imageScale = 0.6;
 
 ArrayList points;
 ArrayList colors;
@@ -61,7 +62,8 @@ void setup() {
 
 void refresh(boolean hardReset) {
   rectMode(CORNER);
-
+  imageMode(CORNER);
+  
   background(54);
   if ( countToGood >= 2 ) {
     // cropping
@@ -122,8 +124,10 @@ void drawStamp(int index) {
 
   pushMatrix();
   translate(stampXY.get(index).x, stampXY.get(index).y);
-  image(s, - stampSizeX/2, - stampSizeY/2, 
-  stampSizeX, stampSizeY);
+  scale(imageScale * vZoom, imageScale * vZoom);
+  imageMode(CENTER);
+  image(s, 0, 0);
+  imageMode(CORNER);
   popMatrix();
 }
 
