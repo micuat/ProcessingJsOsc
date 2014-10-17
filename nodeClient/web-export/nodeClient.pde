@@ -1,4 +1,4 @@
-/* @pjs preload="image.jpg, eye.png"; */
+/* @pjs preload="image.jpg, eye1r.png, eye1l.png, eye2r.png, eye2l.png, kizu.png, star.png"; */
 
 PImage img;
 ArrayList stampImgs;
@@ -42,10 +42,16 @@ void setup() {
   strokeWeight(3);
 
   img = loadImage("image.jpg");
-  stampImgs.add(loadImage("eye.png"));
+  stampImgs.add(loadImage("eye1r.png"));
+  stampImgs.add(loadImage("eye1l.png"));
+  stampImgs.add(loadImage("eye2r.png"));
+  stampImgs.add(loadImage("eye2l.png"));
+  stampImgs.add(loadImage("kizu.png"));
+  stampImgs.add(loadImage("star.png"));
 
-  stampXY.add(new PVector());
-  stampXY.add(new PVector());
+  for( int i = 0; i < stampImgs.size(); i++ ) {
+    stampXY.add(new PVector());
+  }
 
   refresh(true);
 }
@@ -93,8 +99,9 @@ void refresh(boolean hardReset) {
     }
   }
 
-  drawStamp(0);
-  drawStamp(1);
+  for (int i = 0; i < stampXY.size(); i++) {
+    drawStamp(i);
+  }
 }
 
 void draw() {
@@ -102,15 +109,13 @@ void draw() {
 
 void drawStamp(int index) {
   PImage s;
-  if ( index == 0 ) s = stampImgs.get(0);
-  if ( index == 1 ) s = stampImgs.get(0);
+  s = stampImgs.get(index);
 
   float stampSizeX = s.width * vZoom;
   float stampSizeY = s.height * vZoom;
 
   pushMatrix();
   translate(stampXY.get(index).x, stampXY.get(index).y);
-  if ( index == 1 ) scale(-1, 1);
   image(s, - stampSizeX/2, - stampSizeY/2, 
   stampSizeX, stampSizeY);
   popMatrix();
@@ -211,7 +216,8 @@ void mouseDragged() {
       if ( curStamp >= stampXY.size() || curStamp < 0) return;
       stampXY.get(curStamp).x = mouseX;
       stampXY.get(curStamp).y = mouseY;
-      drawStamp(curStamp);
+//      drawStamp(curStamp);
+      refresh(false);
     }
   }
 }
