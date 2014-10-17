@@ -17,26 +17,26 @@ hashCode = function(str){
 io.sockets.on('connection', function (socket) {
   
   socket.on('mouseEvent', function (data) {
-    if( data.m == 0 ) {
-      client.send('/pen/coord', data.x, data.y, hashCode(socket.id), data.m);
+    if( data.s == -1 ) {
+      client.send('/pen/coord', Number(data.x), Number(data.y), Number(data.m), hashCode(socket.id));
     } else {
-      client.send('/stamp/coord', data.x, data.y, hashCode(socket.id), Number(data.s));
+      client.send('/stamp/coord', Number(data.x), Number(data.y), hashCode(socket.id), Number(data.s));
     }
   });
   socket.on('mousePressed', function (data) {
     console.log(socket.id);
-    if( data.m == 0 ) {
-      client.send('/pen/pressed', data.x, data.y, hashCode(socket.id), data.m);
+    if( data.s == -1 ) {
+      client.send('/pen/pressed', Number(data.x), Number(data.y), Number(data.m), hashCode(socket.id));
     } else {
-      client.send('/stamp/pressed', data.x, data.y, hashCode(socket.id), Number(data.s));
+      client.send('/stamp/pressed', Number(data.x), Number(data.y), hashCode(socket.id), Number(data.s));
       console.log(data.s);
     }
   });
   socket.on('mouseReleased', function (data) {
-    if( data.m == 0 ) {
-      client.send('/pen/released', data.x, data.y, hashCode(socket.id), data.m);
+    if( data.s == -1 ) {
+      client.send('/pen/released', Number(data.x), Number(data.y), Number(data.m), hashCode(socket.id));
     } else {
-      client.send('/stamp/released', data.x, data.y, hashCode(socket.id), Number(data.s));
+      client.send('/stamp/released', Number(data.x), Number(data.y), hashCode(socket.id), Number(data.s));
     }
   });
   socket.on('modeChange', function (data) {
