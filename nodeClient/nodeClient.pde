@@ -83,18 +83,6 @@ void refresh(boolean hardReset) {
   rectMode(CENTER);
 
   // restore lines and stamps
-  colorMode(HSB, numModes);
-  int prevX = -1, prevY = -1;
-  for ( int i = 0; i < points.size(); i++ ) {
-    PVector p = points.get(i);
-    if ( prevX >= 0 && p.x >= 0 ) {
-      stroke(colors.get(i), numModes, numModes);
-      line(prevX, prevY, p.x, p.y);
-    }
-    prevX = (int)p.x;
-    prevY = (int)p.y;
-  }
-  colorMode(RGB, 255);
 
   // clear stamps when hard reset
   if ( hardReset ) {
@@ -107,6 +95,19 @@ void refresh(boolean hardReset) {
   for (int i = 0; i < stampXY.size(); i++) {
     drawStamp(i);
   }
+
+  colorMode(HSB, numModes);
+  int prevX = -1, prevY = -1;
+  for ( int i = 0; i < points.size(); i++ ) {
+    PVector p = points.get(i);
+    if ( prevX >= 0 && p.x >= 0 ) {
+      stroke(colors.get(i), numModes, numModes);
+      line(prevX, prevY, p.x, p.y);
+    }
+    prevX = (int)p.x;
+    prevY = (int)p.y;
+  }
+  colorMode(RGB, 255);
 }
 
 void draw() {
@@ -178,6 +179,7 @@ void mousePressed() {
       for ( int i = 0; i < numModes; i++ ) {
         if ( boxSize * i <= mouseY && mouseY < boxSize * (i+1)) {
           penColor = i;
+          mode = 0; // automatically select pen mode
           break;
         }
       }
