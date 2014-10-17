@@ -12,8 +12,10 @@ PVector viewportXY, viewportWH;
 float vZoom; // zoom rate compared to window height
 boolean drawingValid = false;
 int curStamp;
+int penColor = 0;
 
 ArrayList points;
+ArrayList colors;
 
 float toImCoordX(float x) {
   return x / vZoom + viewportXY.x;
@@ -29,6 +31,7 @@ void setup() {
 
   boxSize = 50;
   points = new ArrayList();
+  colors = new ArrayList();
   stampImgs = new ArrayList();
   stampXY = new ArrayList();
   prev = new PVector();
@@ -49,7 +52,7 @@ void setup() {
   stampImgs.add(loadImage("kizu.png"));
   stampImgs.add(loadImage("star.png"));
 
-  for( int i = 0; i < stampImgs.size(); i++ ) {
+  for ( int i = 0; i < stampImgs.size(); i++ ) {
     stampXY.add(new PVector());
   }
 
@@ -72,7 +75,7 @@ void refresh(boolean hardReset) {
   //rect(0, 0, width, height);
 
   drawSidebar();
-  
+
   noStroke();
   fill(200);
   rect(width - boxSize, height - boxSize, boxSize, boxSize);
@@ -80,16 +83,18 @@ void refresh(boolean hardReset) {
   rectMode(CENTER);
 
   // restore lines and stamps
-  stroke(200);
+  colorMode(HSB, numModes);
   int prevX = -1, prevY = -1;
   for ( int i = 0; i < points.size(); i++ ) {
     PVector p = points.get(i);
     if ( prevX >= 0 && p.x >= 0 ) {
+      stroke(colors.get(i), numModes, numModes);
       line(prevX, prevY, p.x, p.y);
     }
     prevX = (int)p.x;
     prevY = (int)p.y;
   }
+  colorMode(RGB, 255);
 
   // clear stamps when hard reset
   if ( hardReset ) {
@@ -130,18 +135,18 @@ void drawSidebar() {
   noFill();
   for ( int i = 0; i < numModes; i++ ) {
     stroke(i, numModes, numModes);
-    //if( i == mode ) fill(i, numModes, numModes);
+    if ( i == penColor ) fill(i, numModes, numModes);
     rect(width - boxSize * 2 - 1, boxSize * i + 1, boxSize - 2, boxSize - 3);
-    //if( i == mode ) noFill();
+    if ( i == penColor ) noFill();
   }
   colorMode(RGB, 255);
-  
+
   noFill();
   for ( int i = 0; i < numModes; i++ ) {
     stroke(204);
-    if( i == mode ) fill(204);
+    if ( i == mode ) fill(204);
     rect(width - boxSize, boxSize * i + 1, boxSize - 2, boxSize - 3);
-    if( i == mode ) noFill();
+    if ( i == mode ) noFill();
   }
 }
 
@@ -153,20 +158,31 @@ void mousePressed() {
       if ( mouseX > width - boxSize && mouseY > height - boxSize ) {
         emitErase();
         points.clear();
+        colors.clear();
         refresh(true);
       }
-      // buttons
+      // mode buttons
       else {
         for ( int i = 0; i < numModes; i++ ) {
           if ( boxSize * i <= mouseY && mouseY < boxSize * (i+1)) {
-            if( i <= 1 ) mode = i;
+            if ( i <= 1 ) mode = i;
             emitModeChange(toImCoordX(mouseX), toImCoordY(mouseY), i);
             break;
           }
         }
         drawSidebar();
       }
-    } 
+    }
+    // pen color
+    else if ( mouseX > width - boxSize*2 - 1 ) {
+      for ( int i = 0; i < numModes; i++ ) {
+        if ( boxSize * i <= mouseY && mouseY < boxSize * (i+1)) {
+          penColor = i;
+          break;
+        }
+      }
+      drawSidebar();
+    }
     else { //if (mouseX < viewportWH.x) {
       drawingValid = true;
       // pen
@@ -174,6 +190,7 @@ void mousePressed() {
         prev.x = mouseX;
         prev.y = mouseY;
         points.add(new PVector(mouseX, mouseY));
+        colors.add(penColor);
       } 
       // update stamp
       else if ( mode == 1 ) {
@@ -213,9 +230,12 @@ void mouseDragged() {
     emitMouse(toImCoordX(mouseX), toImCoordY(mouseY), mode, curStamp);
     if ( mode == 0 ) {
       points.add(new PVector(mouseX, mouseY));
+      colors.add(penColor);
       if ( prev.x >= 0 ) {
-        stroke(200);
+        colorMode(HSB, numModes);
+        stroke(penColor, numModes, numModes);
         line(prev.x, prev.y, mouseX, mouseY);
+        colorMode(RGB, 255);
         prev.x = mouseX;
         prev.y = mouseY;
       }
@@ -224,7 +244,7 @@ void mouseDragged() {
       if ( curStamp >= stampXY.size() || curStamp < 0) return;
       stampXY.get(curStamp).x = mouseX;
       stampXY.get(curStamp).y = mouseY;
-//      drawStamp(curStamp);
+      //drawStamp(curStamp);
       refresh(false);
     }
   }
@@ -236,6 +256,7 @@ void mouseReleased() {
     prev.y = -1;
     if ( mode == 0 ) {
       points.add(new PVector(-1, -1));
+      colors.add(0);
     }
     if ( mouseX > width - boxSize && mouseY > height - boxSize ) {
     } 
