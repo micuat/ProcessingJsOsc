@@ -125,16 +125,24 @@ void drawSidebar() {
   rectMode(CORNER);
   fill(54);
   noStroke();
-  rect(width - boxSize, 0, boxSize, height - boxSize);
+  rect(width - boxSize * 2 - 1, 0, boxSize * 2, height - boxSize);
   colorMode(HSB, numModes);
   noFill();
   for ( int i = 0; i < numModes; i++ ) {
     stroke(i, numModes, numModes);
-    if( i == mode ) fill(i, numModes, numModes);
+    //if( i == mode ) fill(i, numModes, numModes);
+    rect(width - boxSize * 2 - 1, boxSize * i + 1, boxSize - 2, boxSize - 3);
+    //if( i == mode ) noFill();
+  }
+  colorMode(RGB, 255);
+  
+  noFill();
+  for ( int i = 0; i < numModes; i++ ) {
+    stroke(204);
+    if( i == mode ) fill(204);
     rect(width - boxSize, boxSize * i + 1, boxSize - 2, boxSize - 3);
     if( i == mode ) noFill();
   }
-  colorMode(RGB, 255);
 }
 
 void mousePressed() {
