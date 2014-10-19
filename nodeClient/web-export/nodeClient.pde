@@ -13,7 +13,7 @@ float vZoom; // zoom rate compared to window height
 boolean drawingValid = false;
 int curStamp;
 int penColor = 0;
-float imageScale = 0.6;
+float imageScale = 0.6 * 0.33;
 
 ArrayList points;
 ArrayList colors;
@@ -63,7 +63,7 @@ void setup() {
 void refresh(boolean hardReset) {
   rectMode(CORNER);
   imageMode(CORNER);
-  
+
   background(54);
   if ( countToGood >= 2 ) {
     // cropping
@@ -78,10 +78,6 @@ void refresh(boolean hardReset) {
 
   drawSidebar();
 
-  noStroke();
-  fill(200);
-  rect(width - boxSize, height - boxSize, boxSize, boxSize);
-
   rectMode(CENTER);
 
   // restore lines and stamps
@@ -89,7 +85,7 @@ void refresh(boolean hardReset) {
   // clear stamps when hard reset
   if ( hardReset ) {
     for (int i = 0; i < stampXY.size(); i++) {
-      stampXY.get(i).x = i * 100;
+      stampXY.get(i).x = i * 150;
       stampXY.get(i).y = 50;
     }
   }
@@ -98,18 +94,16 @@ void refresh(boolean hardReset) {
     drawStamp(i);
   }
 
-  colorMode(HSB, numModes);
   int prevX = -1, prevY = -1;
   for ( int i = 0; i < points.size(); i++ ) {
     PVector p = points.get(i);
     if ( prevX >= 0 && p.x >= 0 ) {
-      stroke(colors.get(i), numModes, numModes);
+      stroke(colors.get(i)==0?255:0, colors.get(i)==1?255:0, colors.get(i)==2?255:0);
       line(prevX, prevY, p.x, p.y);
     }
     prevX = (int)p.x;
     prevY = (int)p.y;
   }
-  colorMode(RGB, 255);
 }
 
 void draw() {
@@ -136,15 +130,19 @@ void drawSidebar() {
   fill(54);
   noStroke();
   rect(width - boxSize * 2 - 1, 0, boxSize * 2, height - boxSize);
-  colorMode(HSB, numModes);
+
+  fill(150);
+  rect(width - boxSize, height - boxSize * 3, boxSize, boxSize);
+  fill(200);
+  rect(width - boxSize, height - boxSize, boxSize, boxSize);
+
   noFill();
-  for ( int i = 0; i < numModes; i++ ) {
-    stroke(i, numModes, numModes);
-    if ( i == penColor ) fill(i, numModes, numModes);
+  for ( int i = 0; i < 3; i++ ) {
+    stroke(i==0?255:0, i==1?255:0, i==2?255:0);
+    if ( i == penColor ) fill(i==0?255:0, i==1?255:0, i==2?255:0);
     rect(width - boxSize * 2 - 1, boxSize * i + 1, boxSize - 2, boxSize - 3);
     if ( i == penColor ) noFill();
   }
-  colorMode(RGB, 255);
 
   noFill();
   for ( int i = 0; i < numModes; i++ ) {
@@ -160,8 +158,15 @@ void mousePressed() {
     if ( mouseX > width - boxSize ) {
       drawingValid = false;
       // erase
-      if ( mouseX > width - boxSize && mouseY > height - boxSize ) {
+      if ( mouseY > height - boxSize ) {
         emitErase();
+        points.clear();
+        colors.clear();
+        refresh(true);
+      }
+      // undo
+      else if ( mouseY > height - boxSize * 3 && mouseY < height - boxSize * 2 ) {
+        emitUndo();
         points.clear();
         colors.clear();
         refresh(true);
@@ -180,7 +185,7 @@ void mousePressed() {
     }
     // pen color
     else if ( mouseX > width - boxSize*2 - 1 ) {
-      for ( int i = 0; i < numModes; i++ ) {
+      for ( int i = 0; i < 3; i++ ) {
         if ( boxSize * i <= mouseY && mouseY < boxSize * (i+1)) {
           penColor = i;
           mode = 0; // automatically select pen mode
@@ -239,10 +244,8 @@ void mouseDragged() {
       points.add(new PVector(mouseX, mouseY));
       colors.add(penColor);
       if ( prev.x >= 0 ) {
-        colorMode(HSB, numModes);
-        stroke(penColor, numModes, numModes);
+        stroke(penColor==0?255:0, penColor==1?255:0, penColor==2?255:0);
         line(prev.x, prev.y, mouseX, mouseY);
-        colorMode(RGB, 255);
         prev.x = mouseX;
         prev.y = mouseY;
       }

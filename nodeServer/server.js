@@ -47,4 +47,8 @@ io.sockets.on('connection', function (socket) {
     console.log('erasing');
     client.send('/pen/erase', 0, 0, hashCode(socket.id));
   });
+  socket.on('undoEvent', function (data) {
+    console.log('undoing');
+    client.send('/pen/undo', 0, 0, hashCode(socket.id));
+  });
 });
