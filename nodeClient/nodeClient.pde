@@ -85,7 +85,7 @@ void refresh(boolean hardReset) {
   // clear stamps when hard reset
   if ( hardReset ) {
     for (int i = 0; i < stampXY.size(); i++) {
-      stampXY.get(i).x = i * 150;
+      stampXY.get(i).x = 50 + i * 150;
       stampXY.get(i).y = 50;
     }
   }
@@ -167,9 +167,19 @@ void mousePressed() {
       // undo
       else if ( mouseY > height - boxSize * 3 && mouseY < height - boxSize * 2 ) {
         emitUndo();
-        points.clear();
-        colors.clear();
-        refresh(true);
+        points.remove(points.size() - 1);
+        colors.remove(points.size() - 1);
+        for ( int i = points.size() - 1; i >= 0; i-- ) {
+          PVector p = points.get(i);
+          if ( p.x >= 0 && p.y >= 0 ) {
+            points.remove(i);
+            colors.remove(i);
+          } 
+          else {
+            break;
+          }
+        }
+        refresh(false);
       }
       // mode buttons
       else {
