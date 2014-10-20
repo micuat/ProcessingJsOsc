@@ -137,7 +137,7 @@ void drawSidebar() {
   rect(width - boxSize, height - boxSize, boxSize, boxSize);
 
   noFill();
-  for ( int i = 0; i < 3; i++ ) {
+  for ( int i = 0; i < 4; i++ ) {
     stroke(i==0?255:0, i==1?255:0, i==2?255:0);
     if ( i == penColor ) fill(i==0?255:0, i==1?255:0, i==2?255:0);
     rect(width - boxSize * 2 - 1, boxSize * i + 1, boxSize - 2, boxSize - 3);
@@ -195,7 +195,7 @@ void mousePressed() {
     }
     // pen color
     else if ( mouseX > width - boxSize*2 - 1 ) {
-      for ( int i = 0; i < 3; i++ ) {
+      for ( int i = 0; i < 4; i++ ) {
         if ( boxSize * i <= mouseY && mouseY < boxSize * (i+1)) {
           penColor = i;
           mode = 0; // automatically select pen mode
