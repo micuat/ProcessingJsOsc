@@ -44,9 +44,9 @@ function getProcessingSketchId () { return 'nodeClient'; }
 </script>
 
 
-		<script src="http://192.168.11.26:8080/socket.io/socket.io.js"></script> <!--should be server ip -->
+		<script src="http://naotobook.local:8080/socket.io/socket.io.js"></script> <!--should be server ip -->
 		<script>
-		  var socket = io.connect('http://192.168.11.26:8080');  <!--should be server ip -->
+		  var socket = io.connect('http://naotobook.local:8080');  <!--should be server ip -->
 		    socket.emit('my other event', { my: 'hello oF' });
 		  socket.on('news', function (data) {
 		    console.log(data);

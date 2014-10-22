@@ -1,4 +1,4 @@
-/* @pjs preload="image.jpg, eye1r.png, eye1l.png, eye2r.png, eye2l.png, kizu.png, star.png"; */
+/* @pjs preload="image.jpg, eye1r.png, eye1l.png, eye2r.png, eye2l.png, kizu.png, star.png, ball1.png, ball2.png, ball3.png"; */
 
 PImage img;
 ArrayList stampImgs;
@@ -52,6 +52,9 @@ void setup() {
   stampImgs.add(loadImage("eye2l.png"));
   stampImgs.add(loadImage("kizu.png"));
   stampImgs.add(loadImage("star.png"));
+  stampImgs.add(loadImage("ball1.png"));
+  stampImgs.add(loadImage("ball2.png"));
+  stampImgs.add(loadImage("ball3.png"));
 
   for ( int i = 0; i < stampImgs.size(); i++ ) {
     stampXY.add(new PVector());
@@ -85,8 +88,8 @@ void refresh(boolean hardReset) {
   // clear stamps when hard reset
   if ( hardReset ) {
     for (int i = 0; i < stampXY.size(); i++) {
-      stampXY.get(i).x = 50 + i * 150;
-      stampXY.get(i).y = 50;
+      stampXY.get(i).x = 50 + i * 75;
+      stampXY.get(i).y = 50 + 50 * (i%2==0?1:0);
     }
   }
 
