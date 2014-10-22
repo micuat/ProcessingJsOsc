@@ -149,11 +149,19 @@ void drawSidebar() {
 
   noFill();
   for ( int i = 0; i < numModes; i++ ) {
-    stroke(204);
-    if ( i == mode ) fill(204);
+    if( i == 0 || i == 2 || i == 3 || i == 4 || i == 5 || i == 6 ) {
+      stroke(254);
+      fill(254);
+    }
+    else if( i == 1 || i == 7) {
+      stroke(4);
+      fill(4);
+    }
+    if ( i != mode ) noFill();
     rect(width - boxSize, boxSize * i + 1, boxSize - 2, boxSize - 3);
-    if ( i == mode ) noFill();
   }
+  noFill();
+  stroke(204);
 }
 
 void mousePressed() {
