@@ -15,6 +15,8 @@ int curStamp;
 int penColor = 0;
 float imageScale = 0.6 * 0.33;
 
+PFont f;
+
 ArrayList points;
 ArrayList colors;
 
@@ -29,6 +31,9 @@ float toImCoordY(float y) {
 void setup() {
   size(640, 640);
   size(window.innerWidth, window.innerHeight);
+
+  f = createFont("Optima", 72);
+  textFont(f);
 
   boxSize = 50;
   points = new ArrayList();
@@ -76,8 +81,21 @@ void refresh(boolean hardReset) {
   else {
     image(img, 0, 0);
   }
-  //fill(0, 104);
-  //rect(0, 0, width, height);
+
+  noStroke();
+
+  int bw = (width - boxSize*2) / 16;
+  for ( int i = 0; i < 16; i++ ) {
+    if ( i % 2 == 0 )
+      fill(0, 154);
+    else fill(255, 100, 10, 154);
+    rect(i * bw, height - 150, bw, 150);
+  }
+  fill(0, 154);
+  rect(bw - 5, height - 120, bw*14+10, 100);
+  fill(255);
+  text("sharedFace @ IVRC 2014", 50, height - 50);
+
 
   drawSidebar();
 
@@ -149,11 +167,11 @@ void drawSidebar() {
 
   noFill();
   for ( int i = 0; i < numModes; i++ ) {
-    if( i == 0 || i == 2 || i == 3 || i == 4 || i == 5 || i == 6 ) {
+    if ( i == 0 || i == 2 || i == 3 || i == 4 || i == 5 || i == 6 ) {
       stroke(254);
       fill(254);
     }
-    else if( i == 1 || i == 7) {
+    else if ( i == 1 || i == 7) {
       stroke(4);
       fill(4);
     }
