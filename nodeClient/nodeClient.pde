@@ -32,7 +32,7 @@ void setup() {
   size(640, 640);
   size(window.innerWidth, window.innerHeight);
 
-  f = createFont("Optima", 72);
+  f = createFont("Optima", 36);
   textFont(f);
 
   boxSize = 50;
@@ -58,7 +58,9 @@ void setup() {
   stampImgs.add(loadImage("kizu.png"));
   stampImgs.add(loadImage("star.png"));
   stampImgs.add(loadImage("ball1.png"));
+  stampImgs.add(loadImage("ball1.png"));
   stampImgs.add(loadImage("ball2.png"));
+  stampImgs.add(loadImage("ball3.png"));
   stampImgs.add(loadImage("ball3.png"));
 
   for ( int i = 0; i < stampImgs.size(); i++ ) {
@@ -94,9 +96,8 @@ void refresh(boolean hardReset) {
   fill(0, 154);
   rect(bw - 5, height - 120, bw*14+10, 100);
   fill(255);
-  text("sharedFace @ IVRC 2014", 50, height - 50);
-
-
+  text("sharedFace (IVRC 2014 クリスティ特別賞受賞)", 60, height - 60);
+  
   drawSidebar();
 
   rectMode(CENTER);
@@ -106,8 +107,8 @@ void refresh(boolean hardReset) {
   // clear stamps when hard reset
   if ( hardReset ) {
     for (int i = 0; i < stampXY.size(); i++) {
-      stampXY.get(i).x = 50 + i * 75;
-      stampXY.get(i).y = 50 + 50 * (i%2==0?1:0);
+      stampXY.get(i).x = width * 0.6 + int(i/4) * 100;
+      stampXY.get(i).y = 50 + 100 * (i%4==1?1:0) + 200 * (i%4==2?1:0) + 300 * (i%4==3?1:0);
     }
   }
 
