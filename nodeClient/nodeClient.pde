@@ -1,7 +1,6 @@
 PVector prev;
 PVector boxSize;
 int mode = 0;
-int numModes = 8;
 int penColor = 0;
 
 PFont f;
@@ -10,10 +9,10 @@ void setup() {
   size(640, 640);
   size(window.innerWidth, window.innerHeight);
 
-  f = createFont("Optima", 36);
+  f = createFont("Optima", 72);
   textFont(f);
 
-  boxSize = new PVector(window.innerWidth / 2, window.innerHeight / 8);
+  boxSize = new PVector(window.innerWidth / 2, window.innerHeight / 2);
   prev = new PVector();
   frameRate(30);
   smooth();
@@ -43,24 +42,24 @@ void drawSidebar() {
     rect(0, h*i, boxSize.x, h);
   }
   colorMode(RGB, 255);
-  //  for ( int i = 0; i < 4; i++ ) {
-  //    stroke(i==0?255:0, i==1?255:0, i==2?255:0);
-  //    if ( i == penColor ) fill(i==0?255:0, i==1?255:0, i==2?255:0);
-  //    rect(0, boxSize.y * i + 1, boxSize.x - 2, boxSize.y - 3);
-  //    if ( i == penColor ) noFill();
-  //  }
 
   noFill();
-  for ( int i = 0; i < numModes; i++ ) {
-    if ( i == 0 || i == 2 || i == 3 || i == 4 || i == 5 || i == 6 ) {
-      stroke(254);
-      fill(254);
-    } else if ( i == 1 || i == 7) {
-      stroke(4);
-      fill(4);
-    }
+  for ( int i = 0; i < 2; i++ ) {
+    stroke(150, 170, 254);
+    fill(150, 170, 254);
     if ( i != mode ) noFill();
     rect(boxSize.x, boxSize.y * i + 1, boxSize.x - 2, boxSize.y - 3);
+    pushMatrix();
+    translate(boxSize.x * 1.5f, boxSize.y * (i + 0.5f));
+    rotate(PI/2);
+    textAlign(CENTER, CENTER);
+    fill(0);
+    if ( i == 0 ) {
+      text("oil", 0, 0);
+    } else {
+      text("water", 0, 0);
+    }
+    popMatrix();
   }
   noFill();
   stroke(204);
@@ -68,23 +67,14 @@ void drawSidebar() {
 
 void processMouse() {
   if ( mouseX > boxSize.x ) {
-    // erase
-    if ( mouseY > height - boxSize.y ) {
-      emitErase();
-    }
-    // undo
-    else if ( mouseY > height - boxSize.y * 3 && mouseY < height - boxSize.y * 2 ) {
-      emitUndo();
-    }
-    // mode buttons
-    else {
-      for ( int i = 0; i < numModes; i++ ) {
-        if ( boxSize.y * i <= mouseY && mouseY < boxSize.y * (i+1)) {
-          if ( i <= 1 ) mode = i;
-          emitModeChange(mouseX, mouseY, i);
-          break;
-        }
-      }
+    if ( mouseY < boxSize.y ) {
+      // oil
+      emitViscosityChange(0.8f, 0.1f);
+      mode = 0;
+    } else {
+      // water
+      emitViscosityChange(0.99f, 1.0f);
+      mode = 1;
     }
   }
   // pen color
@@ -103,3 +93,4 @@ void mousePressed() {
 void mouseDragged() {
   processMouse();
 }
+

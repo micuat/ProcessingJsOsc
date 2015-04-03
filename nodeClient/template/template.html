@@ -49,6 +49,7 @@
 		    console.log(data);
 		  });
 		  function emitColorChange(penColor) {socket.emit('colorChange', { c: penColor});}
+		  function emitViscosityChange(viscosity, gravity) {socket.emit('viscosityChange', { v: viscosity, g: gravity});}
 		  function emitModeChange(mouseX, mouseY, mode) {socket.emit('modeChange', { x: mouseX, y: mouseY, m: mode});}
 		  function emitErase() {socket.emit('eraseEvent', { doErase: 1});}
 		  function emitUndo() {socket.emit('undoEvent', { doErase: 1});}

@@ -20,6 +20,10 @@ io.sockets.on('connection', function (socket) {
     console.log('color: ' + data.c.toString());
     client.send('/sharedFace/canvas/nodejs/color/hue', data.c);
   });
+  socket.on('viscosityChange', function (data) {
+    console.log('viscosity: ' + data.v.toString() + ' ' + data.g.toString());
+    client.send('/sharedFace/canvas/nodejs/viscosity', data.v, data.g);
+  });
   socket.on('modeChange', function (data) {
     console.log('mode: ' + data.m.toString());
     client.send('/mode/change', data.x, data.y, hashCode(socket.id), data.m);
