@@ -12,7 +12,7 @@ void setup() {
   f = createFont("Optima", 72);
   textFont(f);
 
-  boxSize = new PVector(window.innerWidth / 2, window.innerHeight / 2);
+  boxSize = new PVector(window.innerWidth / 2, window.innerHeight / 3);
   prev = new PVector();
   frameRate(30);
   smooth();
@@ -44,7 +44,7 @@ void drawSidebar() {
   colorMode(RGB, 255);
 
   noFill();
-  for ( int i = 0; i < 2; i++ ) {
+  for ( int i = 0; i < 3; i++ ) {
     stroke(150, 170, 254);
     fill(150, 170, 254);
     if ( i != mode ) noFill();
@@ -56,8 +56,10 @@ void drawSidebar() {
     fill(0);
     if ( i == 0 ) {
       text("oil", 0, 0);
-    } else {
+    } else if ( i == 1) {
       text("water", 0, 0);
+    } else {
+      text("wipe", 0, 0);
     }
     popMatrix();
   }
@@ -69,19 +71,28 @@ void processMouse() {
   if ( mouseX > boxSize.x ) {
     if ( mouseY < boxSize.y ) {
       // oil
+      emitColorChange((float)penColor / 16.0f);
       emitViscosityChange(0.8f, 0.1f);
       mode = 0;
-    } else {
+    } else if ( mouseY < boxSize.y * 2 ) {
       // water
+      emitColorChange((float)penColor / 16.0f);
       emitViscosityChange(0.99f, 1.0f);
       mode = 1;
+    } else {
+      emitViscosityChange(0.99f, 0.1f);
+      emitErase();
+      mode = 2;
     }
   }
   // pen color
   else {
     penColor = (int)map(mouseY, 0, height, 0, 16);
-    mode = 0; // automatically select pen mode
     emitColorChange((float)penColor / 16.0f);
+    if ( mode == 2 ) {
+      emitViscosityChange(0.8f, 0.1f);
+      mode = 0;
+    }
   }
   drawSidebar();
 }

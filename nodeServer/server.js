@@ -30,7 +30,7 @@ io.sockets.on('connection', function (socket) {
   });
   socket.on('eraseEvent', function (data) {
     console.log('erasing');
-    client.send('/pen/erase', 0, 0, hashCode(socket.id));
+    client.send('/sharedFace/canvas/nodejs/wipe', 0, 0, hashCode(socket.id));
   });
   socket.on('undoEvent', function (data) {
     console.log('undoing');
