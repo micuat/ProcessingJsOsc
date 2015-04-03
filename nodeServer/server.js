@@ -1,7 +1,7 @@
 // note, io.listen(<port>) will create a http server for you
 var io = require('socket.io').listen(8080);
 var osc = require('node-osc');
-var client = new osc.Client('127.0.0.1', 57130);
+var client = new osc.Client('127.0.0.1', 57121);
 
 hashCode = function(str){
     var hash = 0;
@@ -16,28 +16,9 @@ hashCode = function(str){
 
 io.sockets.on('connection', function (socket) {
   
-  socket.on('mouseEvent', function (data) {
-    if( data.s == -1 ) {
-      client.send('/pen/coord', Number(data.x), Number(data.y), Number(data.m), hashCode(socket.id));
-    } else {
-      client.send('/stamp/coord', Number(data.x), Number(data.y), hashCode(socket.id), Number(data.s));
-    }
-  });
-  socket.on('mousePressed', function (data) {
-    console.log(socket.id);
-    if( data.s == -1 ) {
-      client.send('/pen/pressed', Number(data.x), Number(data.y), Number(data.m), hashCode(socket.id));
-    } else {
-      client.send('/stamp/pressed', Number(data.x), Number(data.y), hashCode(socket.id), Number(data.s));
-      console.log(data.s);
-    }
-  });
-  socket.on('mouseReleased', function (data) {
-    if( data.s == -1 ) {
-      client.send('/pen/released', Number(data.x), Number(data.y), Number(data.m), hashCode(socket.id));
-    } else {
-      client.send('/stamp/released', Number(data.x), Number(data.y), hashCode(socket.id), Number(data.s));
-    }
+  socket.on('colorChange', function (data) {
+    console.log('color: ' + data.c.toString());
+    client.send('/sharedFace/canvas/nodejs/color/hue', data.c);
   });
   socket.on('modeChange', function (data) {
     console.log('mode: ' + data.m.toString());
