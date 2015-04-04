@@ -77,10 +77,10 @@ void processMouse() {
     } else if ( mouseY < boxSize.y * 2 ) {
       // water
       emitColorChange((float)penColor / 16.0f);
-      emitViscosityChange(0.99f, 1.0f);
+      emitViscosityChange(0.95f, 1.0f);
       mode = 1;
     } else {
-      emitViscosityChange(0.99f, 0.1f);
+      emitViscosityChange(0.95f, 0.1f);
       emitErase();
       mode = 2;
     }
